@@ -1,11 +1,10 @@
-FROM public.ecr.aws/lambda/nodejs:14
-# Alternatively, you can pull the base image from Docker Hub: amazon/aws-lambda-nodejs:12
+FROM denoland/deno:debian-1.13.0 AS production
+COPY ./src /app
+WORKDIR /app
 
-# Assumes your function is named "app.js", and there is a package.json file in the app directory 
-COPY app.js package.json package-lock.json  ${LAMBDA_TASK_ROOT}
+EXPOSE 8080
+CMD ["run", "--allow-net", "--allow-env", "src/index.ts"]
 
-# Install NPM dependencies for function
-RUN npm ci
-
-# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "app.handler" ]
+FROM production as development
+# Denon does not work with Deno 1.14
+RUN deno install --allow-read --allow-run --allow-write --allow-net -f --unstable https://deno.land/x/denon@2.4.8/denon.ts

@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  chrome:
+    image: chromedp/headless-shell:95.0.4636.4
+    command: /headless-shell/headless-shell chromedp/headless-shell --remote-debugging-address=0.0.0.0 --remote-debugging-port=9992 --disable-gpu --headless
+
+
+  server:
+    build:
+      context: .
+      target: development
+    command: /usr/local/bin/denon run --allow-net --allow-env --unstable src/index.ts
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+      - 9229:9229
+    environment:
+      - CHROME_PORT=9992
+      - CHROME_HOSTNAME=chrome
