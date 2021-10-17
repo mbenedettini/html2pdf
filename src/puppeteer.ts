@@ -1,6 +1,11 @@
 import { puppeteer } from "./deps.ts";
 
-async function html2pdf(browserURL = 'http://chrome:9222', html: string) {
+async function html2pdf(html: string, browserURL?: string) {
+  if (!browserURL) {
+    const host = await Deno.resolveDns(Deno.env.get('CHROME_HOSTNAME') as string, 'A');
+    const port = Deno.env.get('CHROME_PORT');
+    browserURL = `http://${host}:${port}`;
+  }
   const browser = await puppeteer.connect({ browserURL });
 
   console.log(">>>>>> Opening page");
@@ -18,7 +23,6 @@ async function html2pdf(browserURL = 'http://chrome:9222', html: string) {
   await page.close();
   await browser.disconnect();
   console.log(">>>>> DONE");
-    // await writeFile('/tmp/sarlanga.pdf', pdf);
   return pdf;
 }
 
