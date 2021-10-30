@@ -1,5 +1,5 @@
 FROM denoland/deno:debian-1.14.0 AS production
-COPY ./src /app
+COPY ./src /app/src
 WORKDIR /app
 
 EXPOSE 8080
