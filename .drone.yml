@@ -1,0 +1,16 @@
+branches:
+  - [master]
+
+pipeline:
+  build:
+    when:
+      branch: master
+      event: push
+    image: docker:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    secrets: [registry_username, registry_password]
+    commands:
+      - docker build -t registry.dev.codexia.io/html2pdf:${DRONE_COMMIT_SHA} -f Dockerfile --pull .
+      - docker login -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD" https://registry.dev.codexia.io
+      - docker push registry.dev.codexia.io/html2pdf:${DRONE_COMMIT_SHA}
