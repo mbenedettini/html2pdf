@@ -3,7 +3,7 @@ COPY ./src /app/src
 WORKDIR /app
 
 EXPOSE 8080
-CMD ["run", "--allow-net", "--allow-env", "/app/src/index.ts"]
+CMD ["run", "--allow-net", "--allow-env", "--unstable", "/app/src/index.ts"]
 
 FROM production as development
 # Denon does not work with Deno 1.14
