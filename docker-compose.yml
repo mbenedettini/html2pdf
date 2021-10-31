@@ -10,7 +10,7 @@ services:
     build:
       context: .
       target: development
-    command: /usr/local/bin/denon run --allow-net --allow-env --unstable src/index.ts
+    command: /usr/local/bin/denon run --allow-net --allow-env --allow-read --unstable src/index.ts
     volumes:
       - .:/app
     ports:
@@ -19,3 +19,4 @@ services:
     environment:
       - CHROME_PORT=9992
       - CHROME_HOSTNAME=chrome
+      - ECS=true
