@@ -27,6 +27,19 @@ router.post("/html2pdf", async ctx => {
   }
 });
 
+router.post("/html2pdf:json", async ctx => {
+  const result = ctx.request.body();
+
+  if (result.type !== "json") {
+    return;
+  }
+  const value = await result.value;
+  const html = value.value as string;
+  const pdf = await html2pdf(html);
+  ctx.response.body = pdf;
+  ctx.response.type = 'application/pdf';
+});
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 

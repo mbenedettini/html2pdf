@@ -48,6 +48,7 @@ async function html2pdf(html: string, browserURL?: string) {
   await page.close();
   await browser.disconnect();
   console.log(">>>>> DONE");
+  // Deno.writeFileSync('/app/src/a.pdf', pdf);
   return pdf;
 }
 
