@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Login to Cloudflare Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ vars.CLOUDFLARE_REGISTRY_URL }}
+        username: ${{ secrets.CLOUDFLARE_REGISTRY_USERNAME }}
+        password: ${{ secrets.CLOUDFLARE_REGISTRY_PASSWORD }}
+    - name: Build and push Docker image
+      env:
+        REGISTRY_URL: ${{ vars.CLOUDFLARE_REGISTRY_URL }}
+      run: |
+        docker build -t $REGISTRY_URL/html2pdf:${{ github.sha }} -t $REGISTRY_URL/html2pdf:latest .
+        docker push $REGISTRY_URL/html2pdf:${{ github.sha }}
+        docker push $REGISTRY_URL/html2pdf:latest
