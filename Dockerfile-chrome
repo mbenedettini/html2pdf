@@ -1,2 +1,0 @@
-FROM chromedp/headless-shell:95.0.4636.4
-EXPOSE 9222
