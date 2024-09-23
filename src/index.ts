@@ -10,14 +10,20 @@ router.get("/", (ctx: oak.Context) => {
   };
 });
 
+function checkAuthorization(ctx: oak.Context) {
+  const authorizationKey = Deno.env.get("AUTHORIZATION_KEY");
+  if (Boolean(authorizationKey) && ctx.request.headers.get("Authorization") !== authorizationKey) {
+    ctx.response.status = 401;
+    return false;
+  }
+  return true;
+}
 
 router.post("/html2pdf", async (ctx: oak.Context) => {
   if (!ctx.request.hasBody) {
     return;
   }
-  const authorizationKey = Deno.env.get("AUTHORIZATION_KEY");
-  if (Boolean(authorizationKey) && ctx.request.headers.get("Authorization") !== authorizationKey) {
-    ctx.response.status = 401;
+  if (!checkAuthorization(ctx)) {
     return;
   }
   
@@ -30,6 +36,10 @@ router.post("/html2pdf", async (ctx: oak.Context) => {
 });
 
 router.post("/html2pdf:json", async (ctx: oak.Context) => {
+  if (!checkAuthorization(ctx)) {
+    return;
+  }
+
   const body = ctx.request.body;
 
   if (body.type() !== "json") {
