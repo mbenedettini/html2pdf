@@ -1,4 +1,4 @@
-import { oak, BodyType } from "./deps.ts";
+import { oak } from "./deps.ts";
 import { html2pdf } from "./puppeteer.ts";
 
 const app = new oak.Application();
