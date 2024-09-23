@@ -1,4 +1,4 @@
-import { oak } from "./deps.ts";
+import { oak, BodyType } from "./deps.ts";
 import { html2pdf } from "./puppeteer.ts";
 
 const app = new oak.Application();
@@ -9,6 +9,7 @@ router.get("/", (ctx: oak.Context) => {
     message: "Hello world"
   };
 });
+
 
 router.post("/html2pdf", async (ctx: oak.Context) => {
   if (!ctx.request.hasBody) {
@@ -23,6 +24,19 @@ router.post("/html2pdf", async (ctx: oak.Context) => {
   const formData = await ctx.request.body.formData();
   const htmlFile = formData.get("html") as File;
   const html = new TextDecoder().decode(await htmlFile.arrayBuffer());
+  const pdf = await html2pdf(html);
+  ctx.response.body = pdf;
+  ctx.response.type = 'application/pdf';
+});
+
+router.post("/html2pdf:json", async (ctx: oak.Context) => {
+  const body = ctx.request.body;
+
+  if (body.type() !== "json") {
+    return;
+  }
+  const value = await body.json();
+  const html = value.value as string;
   const pdf = await html2pdf(html);
   ctx.response.body = pdf;
   ctx.response.type = 'application/pdf';
