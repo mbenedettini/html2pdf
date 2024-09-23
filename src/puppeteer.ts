@@ -1,6 +1,4 @@
 import { puppeteer } from "./deps.ts";
-import Hosts from 'https://deno.land/x/deno_hosts@v1.0.1/mod.ts';
-
 
 async function html2pdf(html: string, browserURL?: string) {
   if (!browserURL) {
