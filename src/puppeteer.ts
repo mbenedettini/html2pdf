@@ -3,7 +3,6 @@ import Hosts from 'https://deno.land/x/deno_hosts@v1.0.1/mod.ts';
 
 
 async function html2pdf(html: string, browserURL?: string) {
-  let host = '';
   if (!browserURL) {
     let host = '';
     /*
@@ -19,15 +18,7 @@ async function html2pdf(html: string, browserURL?: string) {
       provided in fetch(), and there aren't other reliable http client
       implementations.
     */
-    if (Deno.env.get('ECS')) {
-      console.log(">>>>>>>>>>>>>>>>>>> ECS");
-      const hostsPath = "/etc/hosts";  // Hosts file path
-      const hosts = new Hosts(Deno.readTextFileSync(hostsPath));
-      host = hosts.resolve(Deno.env.get('CHROME_HOSTNAME') as string) as string;
-    } else {
-      host = (await Deno.resolveDns(Deno.env.get('CHROME_HOSTNAME') as string, 'A'))[0];
-    }
-    console.log(host);
+    host = (await Deno.resolveDns(Deno.env.get('CHROME_HOSTNAME') as string, 'A'))[0];
     const port = Deno.env.get('CHROME_PORT');
     browserURL = `http://${host}:${port}`;
   }
