@@ -1,3 +1,9 @@
+# html2pdf
+
+Experimental project that implements an html2pdf service based on Deno and Puppeteer. Puppeteer consumes a headless Chrome that is always running on a separate container to avoid cold start delays.
+
+## Test scripts
+
 ```bash
 #!/bin/bash
 
